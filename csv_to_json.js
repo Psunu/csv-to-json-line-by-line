@@ -1,49 +1,26 @@
+const { Command } = require("commander");
 const fs = require("fs");
 const readline = require("readline");
 
-const Options = {
-  in: "--in",
-  out: "--out",
-  delimiter: "--delimiter",
-  stringToken: "--string-token",
-};
+const program = new Command();
 
-let settings = {
-  out: "out.json",
-  delimiter: ",",
-};
-
-try {
-  parseOptions();
-} catch (e) {
-  console.log(e);
-  console.log(
-    `usage : node csv_to_json --in <source_path> --out <output_path> --delimiter <delimiter> --string-token <string_token>
-      --in option is mandatory
-      --string-token can be passed like --string-token '"' --string-token \"
-      `
+program
+  .argument("<source_path>", "source csv file path")
+  .option("--out <path>", "output file path", "out.json")
+  .option("--delimiter <char>", "text delimiter", ",")
+  .option(
+    "--string-token <char>",
+    `string token can be passed like --string-token '"' or --string-token \"`
   );
-  process.exit(1);
-}
 
-console.log(settings);
+program.parse();
+
 runLineByLine(
-  settings.in,
-  settings.out,
-  settings.delimiter,
-  settings.stringToken
+  program.args[0],
+  program.opts().out,
+  program.opts().delimiter,
+  program.opts().stringToken
 );
-
-function parseOptions() {
-  for (const key in Options) {
-    const index = process.argv.indexOf(Options[key]);
-    if (index === -1) {
-      if (Options[key] === Options.in) throw "--in option is required";
-      continue;
-    }
-    settings[key] = process.argv[index + 1];
-  }
-}
 
 async function runLineByLine(input, output, delimiter, stringToken) {
   const fileStream = fs.createReadStream(input);
