@@ -32,17 +32,20 @@ async function runLineByLine(input, output, delimiter, stringToken) {
   let fd;
   try {
     fd = fs.openSync(output, "a");
+    fs.appendFileSync(fd, "[");
 
     let fields;
+    let json;
     for await (const line of rl) {
       if (!fields) {
         fields = splitCsv(line, delimiter, stringToken);
         continue;
       }
-
+      if (json) fs.appendFileSync(fd, JSON.stringify(json) + ",");
       json = csvToJson(line, fields, delimiter, stringToken);
-      fs.appendFileSync(fd, JSON.stringify(json));
     }
+
+    fs.appendFileSync(fd, JSON.stringify(json) + "]");
   } finally {
     if (fd !== undefined) fs.closeSync(fd);
     console.log("done");
