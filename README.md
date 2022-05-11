@@ -1,4 +1,4 @@
-# csv_to_json_line_by_line
+# csv-to-json-line-by-line
 대용량 csv 파일을 json 형식으로 변환하기 위한 툴입니다.  
 When you convert huge size of csv to json.
 
