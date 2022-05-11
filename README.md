@@ -1,4 +1,4 @@
-# csv_to_json_line_by_line
+# csv-to-json-line-by-line
 대용량 csv 파일을 json 형식으로 변환하기 위한 툴입니다.  
 When you convert huge size of csv to json.
 
@@ -7,7 +7,14 @@ It will only load data line by line and after converted to json, GC will release
 
 # Usage
 ```
-node csv_to_json --in <source_path> --out <output_path> --delimiter <delimiter> --string-token <string_token>
+Usage: csv_to_json [options] <source_path>
 
---in option is mandatory
---string-token can be passed like --string-token '"' --string-token \"
+Arguments:
+  source_path            source csv file path
+
+Options:
+  --out <path>           output file path (default: "out.json")
+  --delimiter <char>     text delimiter (default: ",")
+  --string-token <char>  string token can be passed like --string-token '"' or --string-token "
+  -h, --help             display help for command
+```
