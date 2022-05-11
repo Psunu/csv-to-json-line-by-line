@@ -36,11 +36,24 @@ async function runLineByLine(input, output, delimiter, stringToken) {
 
     let fields;
     let json;
-    for await (const line of rl) {
+    let temp = "";
+    for await (let line of rl) {
       if (!fields) {
         fields = splitCsv(line, delimiter, stringToken);
         continue;
       }
+
+      // If string does not end with stringToken, the string continues with the next line.
+      // so the string needs to be merged with the next line.
+      if (temp) {
+        line = temp + line;
+        temp = "";
+      }
+      if (stringToken && !line.endsWith(stringToken)) {
+        temp += line.replace("\n", " ");
+        continue;
+      }
+
       if (json) fs.appendFileSync(fd, JSON.stringify(json) + ",");
       json = csvToJson(line, fields, delimiter, stringToken);
     }
